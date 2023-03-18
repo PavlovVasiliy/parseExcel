@@ -1,17 +1,20 @@
 package org.example;
 
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class ParseRoles {
-
-
+public class ParseObjects {
     static int startPos = 2; // Начало данных с 3 строки в файле
     static Workbook resultFile = Main.resultFile;
 
-    static Sheet sheetRole = resultFile.getSheet("Роли");
+    static Sheet sheetModel = resultFile.getSheet("Объекты");
 
     private static Map<Integer, List<String>> defineLimitsMap() {
 
@@ -19,12 +22,12 @@ public class ParseRoles {
         Integer pos = 0;
 
         // Берем лист с ролями и выбираем заголовки
-        Row roleHeaders = sheetRole.getRow(1);
+        Row interfaceHeaders = sheetModel.getRow(1);
 
         // Заполняем карту на кажду позицию шаблона
-        for (int i = 0; i < roleHeaders.getLastCellNum() - 3; i++) {
+        for (int i = 0; i < interfaceHeaders.getLastCellNum() - 2; i++) {
             List<String> fields = new ArrayList<>();
-            fields.add(roleHeaders.getCell(i).getStringCellValue().trim().toLowerCase());
+            fields.add(interfaceHeaders.getCell(i).getStringCellValue().trim().toLowerCase());
 
             // 0 - варианты столбца А
             if (i == 0) {
@@ -33,30 +36,46 @@ public class ParseRoles {
 
             // 1 - варианты столбца B
             if (i == 1) {
-                fields.add("ID роли".toLowerCase());
+//                fields.add("ID интерфейса".toLowerCase());
             }
 
             // 2 - варианты столбца C
             if (i == 2) {
-                fields.add("Наименование роли".toLowerCase());
-                fields.add("Название роли".toLowerCase());
-                fields.add("Роль".toLowerCase());
             }
 
             // 3 - варианты столбца D
             if (i == 3) {
-                fields.add("Описание".toLowerCase());
-                fields.add("Краткое описание роли".toLowerCase());
-                fields.add("Должность".toLowerCase());
+                fields.add("владелец (организационная единица)".toLowerCase());
+                fields.add("Владелец (организационная единица".toLowerCase());
+
+
+//                fields.add("От".toLowerCase());
             }
 
             // 4 - варианты столбца E
             if (i == 4) {
-                fields.add("Роль".toLowerCase());
-                fields.add("КПЭ".toLowerCase());
-                fields.add("Ключевой Показатель Эффективности".toLowerCase());
-                fields.add("Описание".toLowerCase());
+                fields.add("система - владелец данных".toLowerCase());
+                fields.add("Владелец данных".toLowerCase());
+//                fields.add("К(Система или БП)".toLowerCase());
+//                fields.add("Куда".toLowerCase());
             }
+
+            // 5 - варианты столбца F
+            if (i == 5) {
+                fields.add("система -потребитель данных".toLowerCase());
+                fields.add("Потребитель данных".toLowerCase());
+                fields.add("Система –Потребитель данных".toLowerCase());
+//                fields.add("Частота взаимодействия".toLowerCase());
+//                fields.add("Частота передачи".toLowerCase());
+            }
+
+            // 6 - варианты столбца G
+            if (i == 6) {
+//                fields.add("Частота взаимодействия".toLowerCase());
+//                fields.add("Частота передачи".toLowerCase());
+            }
+
+
 
             map.put(pos++, fields);
         }
@@ -64,7 +83,7 @@ public class ParseRoles {
         return map;
     }
 
-    public static void parseRoles(Workbook curWorkbook, String fileName) throws IOException {
+    public static void parseObjects(Workbook curWorkbook, String fileName) throws IOException {
 
         // Лист Sheet'ов которые удоволетворяют условию
         List<String> curListNameSheet = new ArrayList<>();
@@ -80,8 +99,12 @@ public class ParseRoles {
             // Собираем лист текущих заголовков столбцов
             List<String> listCurFields = getHeadersList(curHeaders);
 
+            if (fileName.equals("CherMK_BP_MasterDataConfiguration_Rev01(RU)_CRM.docx.xlsx")) {
+                int ll = 1;
+            }
+
             // Определяем является ли данный лист листом с Ролями
-            boolean isConditionOk = isRoleSheet(listCurFields, limitsMap);
+            boolean isConditionOk = isConditionSheetOk(listCurFields, limitsMap);
 
             // Если лист с ролям
             if (isConditionOk) {
@@ -93,9 +116,9 @@ public class ParseRoles {
         }
 
         if (curListNameSheet.size() == 0)
-            System.out.println("В файле " + fileName + " ролей не найдено");
+            System.out.println("В файле " + fileName + " объектов не найдено");
         else
-            System.out.println("В файле " + fileName + " ролям соответствуют листы: " + curListNameSheet);
+            System.out.println("В файле " + fileName + " объектам соответствуют листы: " + curListNameSheet);
     }
 
 
@@ -128,19 +151,23 @@ public class ParseRoles {
         }
     }
 
-    private static boolean isRoleSheet(List<String> listCurFields, Map<Integer, List<String>> map) {
+    private static boolean isConditionSheetOk(List<String> listCurFields, Map<Integer, List<String>> map) {
 
-        boolean isRoleSheet = true;
+        boolean isConditionOk = true;
+
 
         // Проверка по каждой корзине
         for (Integer i = 0; i < listCurFields.size() && i < map.size(); i++) {
+            if (i == 17) {
+                int ll = 1;
+            }
             if (!map.get(i).contains(listCurFields.get(i))) {
-                isRoleSheet = false;
+                isConditionOk = false;
                 break;
             }
         }
 
-        return isRoleSheet;
+        return isConditionOk;
     }
 
     private static List<String> getHeadersList(Row headers) {
@@ -158,7 +185,7 @@ public class ParseRoles {
     }
 
     private static void copyRowToCur(Row row) {
-        Row rowNew = sheetRole.createRow(startPos++);
+        Row rowNew = sheetModel.createRow(startPos++);
 
         for (int j = 0; j <= row.getLastCellNum(); j++) {
             if (row.getCell(j) == null) continue;

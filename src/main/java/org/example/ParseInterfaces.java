@@ -71,7 +71,7 @@ public class ParseInterfaces {
         return map;
     }
 
-    public static void interfacies(Workbook curWorkbook, String fileName) throws IOException {
+    public static void parseInterfacies(Workbook curWorkbook, String fileName) throws IOException {
 
         // Лист Sheet'ов которые удоволетворяют условию
         List<String> curListNameSheet = new ArrayList<>();
