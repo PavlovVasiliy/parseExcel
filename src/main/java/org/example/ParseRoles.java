@@ -9,8 +9,6 @@ public class ParseRoles {
 
 
     static int startPos = 2; // Начало данных с 3 строки в файле
-
-
     static Workbook resultFile = Main.resultFile;
 
     static Sheet sheetRole = resultFile.getSheet("Роли");
@@ -21,7 +19,6 @@ public class ParseRoles {
         Integer pos = 0;
 
         // Берем лист с ролями и выбираем заголовки
-        Sheet sheetRole = resultFile.getSheet("Роли");
         Row roleHeaders = sheetRole.getRow(1);
 
         // Заполняем карту на кажду позицию шаблона
@@ -84,10 +81,10 @@ public class ParseRoles {
             List<String> listCurFields = getHeadersList(curHeaders);
 
             // Определяем является ли данный лист листом с Ролями
-            boolean isRoleSheet = isRoleSheet(listCurFields, limitsMap);
+            boolean isConditionOk = isRoleSheet(listCurFields, limitsMap);
 
             // Если лист с ролям
-            if (isRoleSheet) {
+            if (isConditionOk) {
                 curListNameSheet.add(curSheet.getSheetName());
 
                 // Копирование строк
