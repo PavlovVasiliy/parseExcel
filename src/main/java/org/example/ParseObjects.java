@@ -21,7 +21,7 @@ public class ParseObjects {
         Map<Integer, List<String>> map = new HashMap<>();
         Integer pos = 0;
 
-        // Берем лист с ролями и выбираем заголовки
+        // Берем лист с объектами и выбираем заголовки
         Row interfaceHeaders = sheetModel.getRow(1);
 
         // Заполняем карту на кажду позицию шаблона
@@ -36,7 +36,7 @@ public class ParseObjects {
 
             // 1 - варианты столбца B
             if (i == 1) {
-//                fields.add("ID интерфейса".toLowerCase());
+
             }
 
             // 2 - варианты столбца C
@@ -47,17 +47,12 @@ public class ParseObjects {
             if (i == 3) {
                 fields.add("владелец (организационная единица)".toLowerCase());
                 fields.add("Владелец (организационная единица".toLowerCase());
-
-
-//                fields.add("От".toLowerCase());
             }
 
             // 4 - варианты столбца E
             if (i == 4) {
                 fields.add("система - владелец данных".toLowerCase());
                 fields.add("Владелец данных".toLowerCase());
-//                fields.add("К(Система или БП)".toLowerCase());
-//                fields.add("Куда".toLowerCase());
             }
 
             // 5 - варианты столбца F
@@ -65,17 +60,7 @@ public class ParseObjects {
                 fields.add("система -потребитель данных".toLowerCase());
                 fields.add("Потребитель данных".toLowerCase());
                 fields.add("Система –Потребитель данных".toLowerCase());
-//                fields.add("Частота взаимодействия".toLowerCase());
-//                fields.add("Частота передачи".toLowerCase());
             }
-
-            // 6 - варианты столбца G
-            if (i == 6) {
-//                fields.add("Частота взаимодействия".toLowerCase());
-//                fields.add("Частота передачи".toLowerCase());
-            }
-
-
 
             map.put(pos++, fields);
         }
@@ -88,7 +73,7 @@ public class ParseObjects {
         // Лист Sheet'ов которые удоволетворяют условию
         List<String> curListNameSheet = new ArrayList<>();
 
-        // Мапа для определения листа с ролями
+        // Мапа для определения листа с объектами
         Map<Integer, List<String>> limitsMap = defineLimitsMap();
 
         // Проход по листам
@@ -99,14 +84,10 @@ public class ParseObjects {
             // Собираем лист текущих заголовков столбцов
             List<String> listCurFields = getHeadersList(curHeaders);
 
-            if (fileName.equals("CherMK_BP_MasterDataConfiguration_Rev01(RU)_CRM.docx.xlsx")) {
-                int ll = 1;
-            }
-
-            // Определяем является ли данный лист листом с Ролями
+            // Определяем является ли данный лист листом с объектами
             boolean isConditionOk = isConditionSheetOk(listCurFields, limitsMap);
 
-            // Если лист с ролям
+            // Если лист с объектами
             if (isConditionOk) {
                 curListNameSheet.add(curSheet.getSheetName());
 
@@ -158,9 +139,6 @@ public class ParseObjects {
 
         // Проверка по каждой корзине
         for (Integer i = 0; i < listCurFields.size() && i < map.size(); i++) {
-            if (i == 17) {
-                int ll = 1;
-            }
             if (!map.get(i).contains(listCurFields.get(i))) {
                 isConditionOk = false;
                 break;

@@ -8,7 +8,7 @@ import java.util.List;
 public class Main {
 
     private static String dirPath = "C:\\Main\\Северсталь\\Модели\\От северстали\\QMET_USERS_BP_cur\\";
-    private static String resultFileName = "result\\Результат_в3.xlsx";
+    private static String resultFileName = "result\\Результат_в5.xlsx";
 
     public static List<String> excelList = Excel.getListExcelFilesInDir(dirPath);
 
@@ -21,11 +21,10 @@ public class Main {
 
         // Проход по всем файлам
         for (String fileName : listExcelFilesInDir) {
-//            ParseRoles.parseRoles(Excel.openWorkBook(dirPath, fileName), fileName);
-//            ParseInterfaces.parseInterfacies(Excel.openWorkBook(dirPath, fileName), fileName);
-//            ParseObjects.parseObjects(Excel.openWorkBook(dirPath, fileName), fileName);
-
-
+            ParseRoles.parseRoles(Excel.openWorkBook(dirPath, fileName), fileName);
+            ParseInterfaces.parseInterfacies(Excel.openWorkBook(dirPath, fileName), fileName);
+            ParseObjects.parseObjects(Excel.openWorkBook(dirPath, fileName), fileName);
+            ParseBP.parseBP(Excel.openWorkBook(dirPath, fileName), fileName);
         }
 
         // Запись результата

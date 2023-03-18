@@ -21,7 +21,7 @@ public class ParseInterfaces {
         Map<Integer, List<String>> map = new HashMap<>();
         Integer pos = 0;
 
-        // Берем лист с ролями и выбираем заголовки
+        // Берем лист с интерфейсами и выбираем заголовки
         Row interfaceHeaders = sheetModel.getRow(1);
 
         // Заполняем карту на кажду позицию шаблона
@@ -63,8 +63,6 @@ public class ParseInterfaces {
                 fields.add("Частота передачи".toLowerCase());
             }
 
-
-
             map.put(pos++, fields);
         }
 
@@ -76,7 +74,7 @@ public class ParseInterfaces {
         // Лист Sheet'ов которые удоволетворяют условию
         List<String> curListNameSheet = new ArrayList<>();
 
-        // Мапа для определения листа с ролями
+        // Мапа для определения листа с интерфейсами
         Map<Integer, List<String>> limitsMap = defineLimitsMap();
 
         // Проход по листам
@@ -87,14 +85,10 @@ public class ParseInterfaces {
             // Собираем лист текущих заголовков столбцов
             List<String> listCurFields = getHeadersList(curHeaders);
 
-            if (fileName.equals("CherMK_BP_MaterialUsageDecision_Rev01(RU)_TPZ.docx.xlsx")){
-
-                int ll = 1;
-            }
-            // Определяем является ли данный лист листом с Ролями
+            // Определяем является ли данный лист листом с Интерфейсами
             boolean isConditionOk = isConditionSheetOk(listCurFields, limitsMap);
 
-            // Если лист с ролям
+            // Если лист с интерфейсами
             if (isConditionOk) {
                 curListNameSheet.add(curSheet.getSheetName());
 
